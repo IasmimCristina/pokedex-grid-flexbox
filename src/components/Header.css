@@ -1,0 +1,26 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--light-color);
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 8px rgba(44, 66, 81, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid var(--accent-color);
+  z-index: 1000;
+}
+
+.header__logo {
+  width: 40px;
+  height: auto;
+  margin-right: 0.5rem;
+}
+
+.header__title {
+  font-size: 1.5rem;
+  color: var(--dark-color);
+  font-weight: bold;
+}

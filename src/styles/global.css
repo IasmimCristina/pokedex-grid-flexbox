@@ -1,0 +1,96 @@
+/* Color Variables */
+:root {
+  --dark-color: #2c4251; 
+  --light-color: #f3f3f3; 
+  --accent-color: #c74a4a; 
+  --primary-color: #8bdefe; 
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  color: var(--dark-color);
+  background-color: var(--dark-color);
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+h1,
+h2,
+h3 {
+  color: var(--dark-color);
+}
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  font-size: 1.5rem;
+}
+h3 {
+  font-size: 1.25rem;
+}
+
+button {
+  border-radius: 0.8rem;
+  background-color: var(--accent-color);
+  color: var(--light-color);
+  transition:  transform 0.3s;
+  font-weight: bold;
+  height: 4rem;
+  width: 10rem;
+  font-size: 1rem;
+  margin: auto;
+}
+button:hover {
+  transition: all 0.3s ease-in-out;
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Scrollbar Styling - START */
+*::-webkit-scrollbar {
+  width: 0.6rem;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Scrollbar Styling - END */

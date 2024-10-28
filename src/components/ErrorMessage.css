@@ -1,0 +1,5 @@
+.error-message {
+  color: var(--accent-color);
+  text-align: center;
+  margin: 2rem;
+}
