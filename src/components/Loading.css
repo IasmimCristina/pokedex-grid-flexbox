@@ -1,8 +1,14 @@
 .loading {
+  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 2rem;
-  color: var(--light-color);
+}
+
+.loading__text {
+  color: var(--primary-color);
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 2rem;
 }

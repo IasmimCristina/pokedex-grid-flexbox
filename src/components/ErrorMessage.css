@@ -1,5 +1,24 @@
 .error-message {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  box-shadow: 0 4px 8px rgba(44, 66, 81, 0.2);
   color: var(--accent-color);
   text-align: center;
-  margin: 2rem;
+  /* margin: 2rem; */
+  background-color: var(--light-color);
+  padding: 2rem;
+  border-radius: 1rem;
+  /* ma */
+  max-width: 40rem;
+}
+
+.error-message__text {
+  color: var(--accent-color);
+  margin-top: 1rem;
+  font-weight: bold;
+  font-size: 2rem;
 }

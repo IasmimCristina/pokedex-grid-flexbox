@@ -13,6 +13,14 @@
   box-shadow: 0 4px 8px rgba(44, 66, 81, 0.2);
 }
 
+.pokemon-list__error {
+  color: var(--accent-color);
+  font-style: italic;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 @media (min-width: 480px) {
   .pokemon-list {

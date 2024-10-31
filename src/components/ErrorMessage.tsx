@@ -1,15 +1,20 @@
-// src/components/ErrorMessage.tsx
 import React from 'react';
-import './ErrorMessage.css'; // Crie um arquivo CSS separado para estilização
-
+import './ErrorMessage.css';
 interface ErrorMessageProps {
   message: string;
 }
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
+  const handleReload = () => {
+    window.location.reload();
+  };
   return (
     <div className="error-message">
-      <p>{message}</p>
+
+      <p className='error-message__text'>{message}</p>
+      <button className='error-message__button' onClick={handleReload}>
+        Try again
+      </button>
     </div>
   );
 };

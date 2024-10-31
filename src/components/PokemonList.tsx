@@ -9,30 +9,28 @@ import './PokemonList.css';
 const PokemonList: React.FC = () => {
   const { pokemonList, loading, error, loadMorePokemon } = usePokemonData();
 
-  const handleReload = () => {
-    window.location.reload(); 
-  };
-
   return (
-    <div className="pokemon-list">
-      {loading && <Loading />}
-      {error && (
-        <>
-          <ErrorMessage message={ERROR_MESSAGES.FETCH_ERROR} />
-          <button className='pokemon-list__button' onClick={handleReload}>
-            Try Again
+    <>
+      {loading && pokemonList.length === 0 && <Loading />}
+      {error && pokemonList.length === 0 && (
+
+        <ErrorMessage message={ERROR_MESSAGES.FETCH_ERROR} />
+
+      )}
+      {(pokemonList.length > 0 || (!loading && !error)) && (
+        <div className="pokemon-list">
+          {pokemonList.map((pokemon) => (
+            <PokemonCard key={pokemon.id} pokemon={pokemon} />
+          ))}
+          <button className='pokemon-list__button' onClick={loadMorePokemon}>
+            Load more ( + )
           </button>
-        </>
+          {loading && pokemonList.length > 0 && <Loading />}
+          {error && pokemonList.length > 0 && (<span className="pokemon-list__error">Error during loading, try again...</span>)}
+
+        </div>
       )}
-      {pokemonList.map((pokemon) => (
-        <PokemonCard key={pokemon.id} pokemon={pokemon} />
-      ))}
-      {!loading && !error && (
-        <button className='pokemon-list__button' onClick={loadMorePokemon}>
-          Load more ( + )
-        </button>
-      )}
-    </div>
+    </>
   );
 };
 
