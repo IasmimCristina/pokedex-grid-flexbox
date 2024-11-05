@@ -1,10 +1,11 @@
-/* Color Variables */
+/* Color Variables - START */
 :root {
-  --dark-color: #2c4251; 
-  --light-color: #f3f3f3; 
-  --accent-color: #c74a4a; 
-  --primary-color: #8bdefe; 
+  --dark-color: #090f14;
+  --light-color: #fefff7;
+  --accent-color: #af3b6e;
+  --primary-color: #89bbfe;
 }
+/* Color Variables - END */
 
 * {
   margin: 0;
@@ -20,7 +21,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 16px;
+  font-size: 1rem;
   color: var(--dark-color);
   background-color: var(--dark-color);
 }
@@ -65,7 +66,7 @@ button {
   border-radius: 0.8rem;
   background-color: var(--accent-color);
   color: var(--light-color);
-  transition:  transform 0.3s;
+  transition: transform 0.3s;
   font-weight: bold;
   height: 4rem;
   width: 10rem;
@@ -75,6 +76,14 @@ button {
 button:hover {
   transition: all 0.3s ease-in-out;
   transform: translateY(-5px) scale(1.05);
+}
+
+@media (max-width: 600px) {
+  button {
+    width: 8rem;
+    font-size: 0.8rem;
+    height: 3rem;
+  }
 }
 
 /* Scrollbar Styling - START */
@@ -92,5 +101,4 @@ button:hover {
   border: 2px solid transparent;
   background-clip: padding-box;
 }
-
 /* Scrollbar Styling - END */

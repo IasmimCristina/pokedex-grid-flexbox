@@ -10,7 +10,6 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
   };
   return (
     <div className="error-message">
-
       <p className='error-message__text'>{message}</p>
       <button className='error-message__button' onClick={handleReload}>
         Try again

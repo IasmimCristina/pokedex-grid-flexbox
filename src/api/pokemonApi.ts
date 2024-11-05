@@ -1,13 +1,18 @@
 import axios from "axios";
-import { POKEMON_API_URL, LIMIT } from "../helpers/constants";
+import { LIMIT, ERROR_MESSAGES, POKEMON_API_URL } from "../helpers/constants";
 import { Pokemon } from "../types/Pokemon";
+import { getPokemonApiUrl } from "../helpers/apiUtils";
 
 export const fetchPokemons = async (offset: number): Promise<Pokemon[]> => {
-  await new Promise(resolve => setTimeout(resolve, 5000));
-  if (Math.random() < 0.3) {
-    throw new Error("Random API failure");
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  const apiUrl = getPokemonApiUrl();
+
+  if (apiUrl !== POKEMON_API_URL) {
+    throw new Error(ERROR_MESSAGES.RANDOM_API_FAILURE);
   }
-  const response = await axios.get(`${POKEMON_API_URL}?offset=${offset}&limit=${LIMIT}`);
+
+  const response = await axios.get(`${apiUrl}?offset=${offset}&limit=${LIMIT}`);
   const results = response.data.results;
 
   const pokemonData = await Promise.all(

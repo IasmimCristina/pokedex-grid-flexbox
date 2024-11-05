@@ -31,3 +31,34 @@
   text-transform: capitalize;
   text-align: center;
 }
+
+
+@media (max-width: 480px) {
+  .pokemon-card {
+
+    padding: .8rem;
+  }
+
+  .pokemon-card__image {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+  .pokemon-card__name {
+    font-size:.8rem;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .pokemon-list {
+    width: 80%;
+    padding: 3rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .pokemon-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}

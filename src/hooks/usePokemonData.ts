@@ -1,35 +1,13 @@
-import { useState, useEffect } from "react";
-import { fetchPokemons } from "../api/pokemonApi"; 
-import { Pokemon } from "../types/Pokemon";
-import { LIMIT, ERROR_MESSAGES } from "../helpers/constants";
+import { useContext } from "react";
+import { PokemonDataContext } from "../contexts/PokemonDataContext";
+import { ERROR_MESSAGES } from "../helpers/constants";
 
-export function usePokemonData() {
-  const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
-  const [offset, setOffset] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const usePokemonData = () => {
+  const context = useContext(PokemonDataContext);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null); 
-      try {
-        const pokemonData = await fetchPokemons(offset);
-        setPokemonList((prevList) => [...prevList, ...pokemonData]);
-      } catch (error) {
-        console.error("Error fetching Pokémon:", error);
-        setError(ERROR_MESSAGES.FETCH_ERROR);
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (context === undefined) {
+    throw new Error(ERROR_MESSAGES.FETCH_ERROR);
+  }
 
-    fetchData();
-  }, [offset]);
-
-  const loadMorePokemon = () => {
-    setOffset((prevOffset) => prevOffset + LIMIT);
-  };
-
-  return { pokemonList, loading, error, loadMorePokemon };
-}
+  return context;
+};

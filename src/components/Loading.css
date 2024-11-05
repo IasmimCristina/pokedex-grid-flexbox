@@ -12,3 +12,9 @@
   font-weight: bold;
   font-size: 2rem;
 }
+
+@media (max-width: 480px) {
+  .loading__text {
+    font-size: 1.2rem;
+  }
+}
