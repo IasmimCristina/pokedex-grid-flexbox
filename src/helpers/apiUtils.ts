@@ -1,5 +1,10 @@
-import { POKEMON_API_URL, FAULTY_URL } from "./constants";
+import { ERROR_MESSAGES } from "./constants";
 
-export const getPokemonApiUrl = () => {
-  return Math.random() < 0.7 ? POKEMON_API_URL : FAULTY_URL;
+export const simulateError = (): void => {
+  if (Math.random() < 0.5) {
+    throw new Error(ERROR_MESSAGES.RANDOM_API_FAILURE);
+  }
 };
+
+export const delay = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
