@@ -3,19 +3,22 @@ import { FaSearch, FaLock } from 'react-icons/fa';
 import './Header.css';
 import logo from '../assets/logo.png';
 import useFilter from '../hooks/useFilter';
-import { usePokemonData } from '../hooks/usePokemonData';
+import { usePokemons } from '../hooks/queries/usePokemons';
 
 const Header: React.FC = () => {
   const { filter, setFilter } = useFilter();
-  const { loading } = usePokemonData();
+  const { isLoading } = usePokemons(); // First page, initial.
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
   };
+  const handleLogoClick = () => {
+    window.location.reload(); 
+  };
 
   return (
     <header className="header">
-      <div className="header__logo">
+      <div className="header__logo" onClick={handleLogoClick}>
         <img src={logo} alt="Pokémon Logo showing a pokédex" className="header__logo-img" />
         <h1 className="header__logo-title">Pokédex</h1>
       </div>
@@ -30,18 +33,18 @@ const Header: React.FC = () => {
             value={filter}
             onChange={handleFilterChange}
             className="header__filter-input"
-            aria-disabled={loading}
-            tabIndex={loading ? -1 : 0}
+            aria-disabled={isLoading}
+            tabIndex={isLoading ? -1 : 0}
             aria-describedby="filter-help-text"
           />
-          {loading ? (
+          {isLoading ? (
             <FaLock className="header__filter-icon" aria-hidden="true" />
           ) : (
             <FaSearch className="header__filter-icon" aria-hidden="true" />
           )}
         </div>
         <p id="filter-help-text" className="header__help-text">
-          {loading ? 'Input is disabled while data is loading.' : 'Type to filter Pokémon by name.'}
+          {isLoading ? 'Input is disabled while data is loading.' : 'Type to filter Pokémon by name.'}
         </p>
       </form>
     </header>
