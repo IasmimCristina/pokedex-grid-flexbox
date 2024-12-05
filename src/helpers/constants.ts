@@ -8,4 +8,4 @@ export const ERROR_MESSAGES = {
   EMPTY: "No Pokémon found with that name.",
   FILTER_CONTEXT: "Invalid call to Filter Provider! It's not higher up in the tree."
 };
-export const NETWORK_DELAY = 5000; // 5 seconds delay for testing purposes.
+export const NETWORK_DELAY = 3000; // 3 seconds delay for testing purposes.

@@ -1,7 +1,7 @@
 import { ERROR_MESSAGES } from "./constants";
 
 export const simulateError = (): void => {
-  if (Math.random() < 0.5) {
+  if (Math.random() < 0.5) {  // 50% error chance.
     throw new Error(ERROR_MESSAGES.RANDOM_API_FAILURE);
   }
 };
