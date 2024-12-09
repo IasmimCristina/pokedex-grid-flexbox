@@ -18,6 +18,13 @@
   align-items: center;
 }
 
+.header__logo:hover {
+  transform: scale(1.1);
+  transition: all .3s ease-in-out;
+  cursor: pointer;
+
+}
+
 .header__logo-img {
   width: 40px;
   height: auto;
