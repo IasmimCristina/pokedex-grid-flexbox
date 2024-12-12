@@ -7,21 +7,26 @@ import { usePokemons } from '../hooks/queries/usePokemons';
 
 const Header: React.FC = () => {
   const { filter, setFilter } = useFilter();
-  const { isLoading } = usePokemons(); // First page, initial.
+  const { isLoading } = usePokemons(); 
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
   };
+
   const handleLogoClick = () => {
     window.location.reload(); 
   };
 
   return (
     <header className="header">
-      <div className="header__logo" onClick={handleLogoClick}>
+      <button
+        className="header__logo"
+        onClick={handleLogoClick}
+        aria-label="Reload Pokémon list"
+      >
         <img src={logo} alt="Pokémon Logo showing a pokédex" className="header__logo-img" />
         <h1 className="header__logo-title">Pokédex</h1>
-      </div>
+      </button>
       <form className="header__filter-container" aria-labelledby="filter-label">
         <label id="filter-label" htmlFor="filter-input" className="header__filter-label">
           Filter by Pokémon name:

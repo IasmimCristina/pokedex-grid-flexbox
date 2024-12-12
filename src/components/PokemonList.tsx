@@ -14,7 +14,7 @@ const PokemonList: React.FC = () => {
 
   // Using infinite query.
   const {
-    data,
+    data: pokemons,
     isLoading,
     isError,
     hasNextPage,
@@ -24,8 +24,8 @@ const PokemonList: React.FC = () => {
 
   // Explicitly type and flatten the pages
   const pokemonList: Pokemon[] = React.useMemo(() => 
-    data?.pages.flatMap((page) => page as Pokemon[]) || [], 
-    [data]
+    pokemons?.pages.flatMap((page) => page as Pokemon[]) || [], 
+    [pokemons]
   );
 
   const handleLoadMoreClick = () => {

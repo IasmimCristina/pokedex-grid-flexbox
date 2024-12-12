@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createPokemonService } from "../../api/pokemonService";
-import { HttpClient, makeHttpClient } from "../../api/httpClient";
+import { makeHttpClient } from "../../api/httpClient";
 import { Pokemon } from "../../types/Pokemon";
 import { POKEMON_API_URL, LIMIT } from "../../helpers/constants";
 

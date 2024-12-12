@@ -3,7 +3,7 @@
 > Small project to better understand flexbox and grid use alongside my blog post.
 
 - Deploy link:
-- Blog post link:
+- Blog post link: [In development]
 
 ### App visualization:
 

@@ -16,6 +16,9 @@
 .header__logo {
   display: flex;
   align-items: center;
+  background: none;
+  border: none;
+  margin: 0;
 }
 
 .header__logo:hover {
