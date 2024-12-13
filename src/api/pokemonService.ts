@@ -16,8 +16,9 @@ export const createPokemonService = (httpClient: HttpClient) => {
   // Fetches the list.
   const fetchPokemonList = async (offset: number): Promise<PokemonApi[]> => {
     try {
-      await delay(NETWORK_DELAY);
+      await delay(NETWORK_DELAY); 
       simulateError();
+
       
       const response = await httpClient.get<ApiResults>(`?offset=${offset}&limit=${LIMIT}`);
       return response.data.results;
