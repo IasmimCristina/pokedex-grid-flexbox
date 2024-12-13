@@ -4,7 +4,7 @@ import { cleanup } from "@testing-library/react";
 import { setupServer } from "msw/node";
 import { pokemonHandlers } from "../mocks/handlers";
 
-const server = setupServer(...pokemonHandlers);
+export const server = setupServer(...pokemonHandlers);
 
 beforeAll(() => server.listen({ onUnhandledRequest: "warn" }));
 
