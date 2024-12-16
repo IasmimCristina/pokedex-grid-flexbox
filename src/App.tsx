@@ -7,7 +7,7 @@ import { FilterProvider } from './contexts/FilterProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-const App: React.FC = () => {
+const App = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
