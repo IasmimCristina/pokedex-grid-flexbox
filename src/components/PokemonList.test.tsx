@@ -1,10 +1,11 @@
-import { screen, waitFor } from '@testing-library/react'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import PokemonList from '../components/PokemonList'
 import { describe, expect, vi } from 'vitest'
 import { renderWithProviders, server } from '../tests/setup'
 import { ERROR_MESSAGES, POKEMON_API_URL } from '../helpers/constants'
 import { http, HttpResponse } from 'msw'
 import useFilter from '../hooks/useFilter'
+import { mockPokemonList } from '../mocks/mockPokemonList'
 
 // Mock do useFilter
 vi.mock('../hooks/useFilter', () => ({
@@ -19,6 +20,7 @@ vi.mock('../helpers/apiUtils', async () => {
     simulateError: vi.fn(), // Mocking the simulated errors/delay
     // This was necessary because MSW only intercepts the request, not the functions around it.
   }
+  //  has next page
 })
 
 const customRender = () => renderWithProviders(<PokemonList />)
@@ -36,14 +38,25 @@ describe('PokemonList Component', () => {
   })
 
   it('displays a loading state and then renders Pokemon cards', async () => {
+    // setup
     customRender()
+
+    // ação (opcional)
     const spinner = screen.getByText(/loading.../i)
+
+    // asserção
     expect(spinner).toBeInTheDocument()
   })
 
   it('renders the pokemon cards', async () => {
+    // setup
     customRender()
 
+
+    // ação (opcional)
+
+
+    // asserção
     await waitFor(
       () => {
         const pokemonCards = screen.getAllByTestId('pokemon-card')
@@ -56,8 +69,66 @@ describe('PokemonList Component', () => {
     )
   })
 
-  describe("API Error handling", () => {
-    it('displays an error message when fetching fails', async () => {
+
+
+
+  const mockNextPagePokemon = [
+    {
+      name: 'eevee',
+      url: `${POKEMON_API_URL}/133/`
+    },
+    {
+      name: 'snorlax',
+      url: `${POKEMON_API_URL}/143/`
+    }
+  ];
+
+  server.use(
+    http.get(`${POKEMON_API_URL}/133/`, () => {
+      return HttpResponse.json({
+        id: 133,
+        name: 'eevee',
+        sprites: {
+          other: {
+            "official-artwork": {
+              front_default: 'https://example.com/eevee.png'
+            }
+          }
+        }
+      });
+    }),
+    http.get(`${POKEMON_API_URL}/143/`, () => {
+      return HttpResponse.json({
+        id: 143,
+        name: 'snorlax',
+        sprites: {
+          other: {
+            "official-artwork": {
+              front_default: 'https://example.com/snorlax.png'
+            }
+          }
+        }
+      });
+    })
+  );
+
+
+  describe("When clicking the 'Load more' button", () => {
+    it("shows loading text", async () => {
+      // MSW precisaria has nex page
+    })
+
+    it("loads more Pokémon cards", async () => {
+      //  como sobrecrever outra requisição (após click)
+    })
+
+    it("shows an error message when it fails", async () => {
+      //  sobrecrever a segunda requisição
+    })
+  })
+
+  describe("When there is an API Error", () => {
+    it('displays an error message and a "try again" button when fetching fails', async () => {
       server.use(
         http.get(POKEMON_API_URL, () => {
           return new HttpResponse(null, { status: 500 })
@@ -67,8 +138,8 @@ describe('PokemonList Component', () => {
       customRender()
 
       const errorMessage = await screen.findByText("Error fetching Pokémon data:", {}, { timeout: 2000 })
-      expect(errorMessage).toBeInTheDocument()
-      expect(screen.getByText(/try again/i)).toBeInTheDocument()
+      expect.soft(errorMessage).toBeInTheDocument()
+      expect.soft(screen.getByText(/try again/i)).toBeInTheDocument()
     })
   })
 
@@ -125,11 +196,11 @@ describe('PokemonList Component', () => {
       await waitFor(async () => {
         // Should  show all items that have  at leat one 'a'
         const pokemonCards = screen.getAllByTestId('pokemon-card')
-        expect(pokemonCards).toHaveLength(4)
-        expect(screen.getByText('charmander')).toBeInTheDocument()
-        expect(screen.getByText('gengar')).toBeInTheDocument()
-        expect(screen.getByText('pikachu')).toBeInTheDocument()
-        expect(screen.queryByText('bulbasaur')).toBeInTheDocument()
+        expect.soft(pokemonCards).toHaveLength(4)
+        expect.soft(screen.getByText('charmander')).toBeInTheDocument()
+        expect.soft(screen.getByText('gengar')).toBeInTheDocument()
+        expect.soft(screen.getByText('pikachu')).toBeInTheDocument()
+        expect.soft(screen.queryByText('bulbasaur')).toBeInTheDocument()
 
       });
     });
@@ -152,3 +223,5 @@ describe('PokemonList Component', () => {
     });
   })
 })
+//  Testar usando mocks como resposta
+// 
