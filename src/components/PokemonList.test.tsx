@@ -63,67 +63,92 @@ describe('PokemonList Component', () => {
           return new HttpResponse(null, { status: 500 })
         })
       )
-      
+
       customRender()
-  
+
       const errorMessage = await screen.findByText("Error fetching Pokémon data:", {}, { timeout: 2000 })
       expect(errorMessage).toBeInTheDocument()
       expect(screen.getByText(/try again/i)).toBeInTheDocument()
     })
   })
-  
+
   describe("When filtering", () => {
-    it("displays empty results when no Pokémon matches the filter", async () => {
-      // Mock useFilter to return a filter that won't match any pokemon
+    it("displays a message when no Pokémon matches the filter", async () => {
+      // Mock useFilter - valor inválido.
       vi.mocked(useFilter).mockReturnValue({
         filter: 'xyz',
         setFilter: vi.fn(),
         clearFilter: vi.fn()
       })
-   
+
+      customRender();
+      // É necessáiro esperar até o aparecimento da mensagem.
+      await waitFor(() => {
+        expect(screen.getByText("No Pokémon found with that name.")).toBeInTheDocument();
+      })
+    });
+
+
+    it("displays the correct result when searching for one pokémon", async () => {
+      // Mock useFilter to return a filter that will match specific pokemon
+      vi.mocked(useFilter).mockReturnValue({
+        filter: 'char',
+        setFilter: vi.fn(),
+        clearFilter: vi.fn()
+      })
+
       customRender();
 
       // Wait for initial load
-      await screen.findByTestId("pokemon-card");
-      
-      // Check if empty message is displayed
-      expect(screen.getByText(ERROR_MESSAGES.EMPTY)).toBeInTheDocument();
+      await waitFor(async () => {
+        // Should only show Charmander
+        const pokemonCards = screen.getAllByTestId('pokemon-card')
+        expect(pokemonCards).toHaveLength(1)
+        expect(screen.getByText('charmander')).toBeInTheDocument()
+
+        // Maybe unecessary? v v v
+        expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument()
+      });
     });
 
-    // it("displays the correct results depending on the filter", async () => {
-    //   // Mock useFilter to return a filter that will match specific pokemon
-    //   vi.mocked(useFilter).mockReturnValue({
-    //     filter: 'char',
-    //     setFilter: vi.fn(),
-    //     clearFilter: vi.fn()
-    //   })
-   
-    //   customRender();
+    it("displays multiple results searching one letter", async () => {
 
-    //   // Wait for initial load
-    //   await waitFor(async () => {
-    //     // Should only show Charmander
-    //     const pokemonCards = screen.getAllByTestId('pokemon-card')
-    //     expect(pokemonCards).toHaveLength(1)
-    //     expect(screen.getByText('charmander')).toBeInTheDocument()
-    //     expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument()
-    //   });
-    // });
+      vi.mocked(useFilter).mockReturnValue({
+        filter: 'a',
+        setFilter: vi.fn(),
+        clearFilter: vi.fn()
+      })
 
-    // it("filters pokemon names case-insensitively", async () => {
-    //   vi.mocked(useFilter).mockReturnValue({
-    //     filter: 'CHAR',
-    //     setFilter: vi.fn(),
-    //     clearFilter: vi.fn()
-    //   })
-   
-    //   customRender();
+      customRender();
 
-    //   await waitFor(async () => {
-    //     const pokemonCards = screen.getAllByTestId('pokemon-card')
-    //     expect(pokemonCards).toHaveLength(1)
-    //     expect(screen.getByText('charmander')).toBeInTheDocument()
-    //   });
-    // });
+      // Wait for initial load
+      await waitFor(async () => {
+        // Should  show all items that have  at leat one 'a'
+        const pokemonCards = screen.getAllByTestId('pokemon-card')
+        expect(pokemonCards).toHaveLength(4)
+        expect(screen.getByText('charmander')).toBeInTheDocument()
+        expect(screen.getByText('gengar')).toBeInTheDocument()
+        expect(screen.getByText('pikachu')).toBeInTheDocument()
+        expect(screen.queryByText('bulbasaur')).toBeInTheDocument()
+
+      });
+    });
+
+    // Extra case:
+    it("filters pokemon names case-insensitively", async () => {
+      vi.mocked(useFilter).mockReturnValue({
+        filter: 'CHAR',
+        setFilter: vi.fn(),
+        clearFilter: vi.fn()
+      })
+
+      customRender();
+
+      await waitFor(async () => {
+        const pokemonCards = screen.getAllByTestId('pokemon-card')
+        expect(pokemonCards).toHaveLength(1)
+        expect(screen.getByText('charmander')).toBeInTheDocument()
+      });
+    });
   })
 })
