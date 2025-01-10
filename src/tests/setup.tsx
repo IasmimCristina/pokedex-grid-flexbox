@@ -13,6 +13,7 @@ beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
 afterEach(() => {
   cleanup() // cleans DOM after each test
   server.resetHandlers()
+  queryClient.clear() 
 })
 
 afterAll(() => server.close())

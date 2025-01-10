@@ -12,7 +12,8 @@ export const pokemonHandlers = [
 
   http.get(`${POKEMON_API_URL}/:id/`, async ({ params }) => {
     const id = Number(params.id);
-    const pokemonDetail = mockPokemonDetails[id as keyof typeof mockPokemonDetails];
+    const pokemonDetail =
+      mockPokemonDetails[id as keyof typeof mockPokemonDetails];
 
     if (!pokemonDetail) {
       return new HttpResponse(null, { status: 404 });
@@ -20,4 +21,6 @@ export const pokemonHandlers = [
 
     return HttpResponse.json(pokemonDetail);
   }),
+
+
 ];
