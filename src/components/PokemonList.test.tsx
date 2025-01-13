@@ -15,10 +15,18 @@ vi.mock('../hooks/useFilter', () => ({
   default: vi.fn()
 }));
 
-// Full mock override
-vi.mock('../hooks/queries/usePokemons', () => ({
-  usePokemons: vi.fn()
-}));
+// Not full override
+// vi.mock('../hooks/queries/usePokemons', async () => {
+//   const originalModule = await vi.importActual<typeof import('../hooks/queries/usePokemons')>('../hooks/queries/usePokemons');
+// //  Not working: wrong type. LOAD MORE TESTS INCOMPLETE
+//   return {
+//     ...originalModule,
+//     usePokemons: vi.fn().mockReturnValue({
+//       ...originalModule.usePokemons(), 
+//       hasNextPage: true,  
+//     } as UseInfiniteQueryResult<any, Error>),  
+//   };
+// });
 
 
 // vi.mock('../hooks/queries/usePokemons', async () => {
@@ -141,11 +149,11 @@ describe('PokemonList Component', () => {
       clearFilter: vi.fn()
     })
 
-    vi.mocked(usePokemons).mockReturnValue({
+    // vi.mocked(usePokemons).mockReturnValue({
 
-      // TO-DO: find a way to spread original vlaue here sint it didnt work globally using import actual since it does not allow us to use mockReturnValue.
-      // Commented code are aother attempts.
-    })
+    // TO-DO: find a way to spread original vlaue here sint it didnt work globally using import actual since it does not allow us to use mockReturnValue.
+    // Commented code are aother attempts.
+    // })
   })
 
   it('displays a loading state and then renders Pokemon cards', async () => {

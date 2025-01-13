@@ -18,7 +18,7 @@ export const usePokemons = () => {
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === LIMIT ? allPages.length * LIMIT : undefined;
     },
-    maxPages: 3, // Memory related, it helps, nice detail. See documentaiton.
+    maxPages: 3, // Memory related, it helps, nice detail. See documentation.
     retry: 1,
     retryDelay: 1000,
   });
