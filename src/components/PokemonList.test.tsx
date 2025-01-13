@@ -6,11 +6,18 @@ import { ERROR_MESSAGES, POKEMON_API_URL } from '../helpers/constants'
 import { http, HttpResponse } from 'msw'
 import useFilter from '../hooks/useFilter'
 import { mockPokemonList } from '../mocks/mockPokemonList'
+import { usePokemons } from '../hooks/queries/usePokemons'
 
 // Mock do useFilter
 vi.mock('../hooks/useFilter', () => ({
   default: vi.fn()
 }));
+
+
+// Mock the usePokemons hook
+vi.mock('../hooks/queries/usePokemons', () => ({
+  usePokemons: vi.fn()
+}))
 
 vi.mock('../helpers/apiUtils', async () => {
   const originalModule = await vi.importActual('../helpers/apiUtils')
@@ -20,7 +27,6 @@ vi.mock('../helpers/apiUtils', async () => {
     simulateError: vi.fn(), // Mocking the simulated errors/delay
     // This was necessary because MSW only intercepts the request, not the functions around it.
   }
-  //  has next page
 })
 
 const customRender = () => renderWithProviders(<PokemonList />)
@@ -72,58 +78,22 @@ describe('PokemonList Component', () => {
 
 
 
-  const mockNextPagePokemon = [
-    {
-      name: 'eevee',
-      url: `${POKEMON_API_URL}/133/`
-    },
-    {
-      name: 'snorlax',
-      url: `${POKEMON_API_URL}/143/`
-    }
-  ];
-
-  server.use(
-    http.get(`${POKEMON_API_URL}/133/`, () => {
-      return HttpResponse.json({
-        id: 133,
-        name: 'eevee',
-        sprites: {
-          other: {
-            "official-artwork": {
-              front_default: 'https://example.com/eevee.png'
-            }
-          }
-        }
-      });
-    }),
-    http.get(`${POKEMON_API_URL}/143/`, () => {
-      return HttpResponse.json({
-        id: 143,
-        name: 'snorlax',
-        sprites: {
-          other: {
-            "official-artwork": {
-              front_default: 'https://example.com/snorlax.png'
-            }
-          }
-        }
-      });
-    })
-  );
 
 
   describe("When clicking the 'Load more' button", () => {
     it("shows loading text", async () => {
-      // MSW precisaria has nex page
+      // Vamos fazer um mock auqi também, que tal? Ele nao mocka tudo, apenas a parte que o hasNextPage precisa estar true.
+
     })
 
     it("loads more Pokémon cards", async () => {
-      //  como sobrecrever outra requisição (após click)
+            // Depois, interceptamos a requisição nova feita pelo botão e devolvemos valores ficictíricios auqi nos testes.
+      //  sobrecrever outra requisição (após click)
     })
 
     it("shows an error message when it fails", async () => {
       //  sobrecrever a segunda requisição
+//  a mensagem de ero que aparce é a seguinte: Error during loading, try again...
     })
   })
 
