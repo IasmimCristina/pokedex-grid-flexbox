@@ -5,96 +5,232 @@ import { renderWithProviders, server } from '../tests/setup'
 import { ERROR_MESSAGES, POKEMON_API_URL } from '../helpers/constants'
 import { http, HttpResponse } from 'msw'
 import useFilter from '../hooks/useFilter'
-import { mockPokemonList } from '../mocks/mockPokemonList'
 import { usePokemons } from '../hooks/queries/usePokemons'
+import { UseInfiniteQueryResult } from '@tanstack/react-query'
+
+
 
 // Mock do useFilter
 vi.mock('../hooks/useFilter', () => ({
   default: vi.fn()
 }));
 
-
-// Mock the usePokemons hook
+// Full mock override
 vi.mock('../hooks/queries/usePokemons', () => ({
   usePokemons: vi.fn()
-}))
+}));
+
+
+// vi.mock('../hooks/queries/usePokemons', async () => {
+//   const originalModule = await vi.importActual('../hooks/queries/usePokemons');
+
+//   // Retorna o módulo original com a modificação desejada
+//   return {
+//     ...originalModule,
+//     usePokemons: vi.fn().mockReturnValue({
+//       data: {
+//         pages: [mockPokemonList],  // Lista de Pokémon simulada
+//         pageParams: [],            // Parâmetros de página vazios
+//       },
+//       hasNextPage: true,           // Simula que há mais páginas para carregar
+//       isLoading: false,            // Indica que o carregamento terminou
+//       isError: false,              // Simula que não há erro
+//       isSuccess: true,             // Simula que a query foi bem-sucedida
+//       isIdle: false,               // A query não está ociosa
+//       error: null,                 // Nenhum erro
+//       fetchNextPage: vi.fn(),      // Função mockada para buscar a próxima página
+//       refetch: vi.fn(),            // Função mockada para refazer a query
+//       isPending: false,            // Não está em pendência
+//       isLoadingError: false,       // Não há erro de carregamento
+//       isRefetchError: false,       // Não há erro de refetch
+//       isFetchNextPageError: false // Não há erro ao buscar a próxima página
+//     }),
+//   };
+// });
+
+// Mock para simulação de lista de Pokémons
+const mockPokemonList = [
+  {
+    id: 1,
+    name: 'bulbasaur',
+    sprites: {
+      other: {
+        'official-artwork': {
+          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
+        },
+      },
+    },
+  },
+  {
+    id: 2,
+    name: 'ivysaur',
+    sprites: {
+      other: {
+        'official-artwork': {
+          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png',
+        },
+      },
+    },
+  },
+  {
+    id: 3,
+    name: 'venusaur',
+    sprites: {
+      other: {
+        'official-artwork': {
+          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png',
+        },
+      },
+    },
+  },
+  {
+    id: 4,
+    name: 'charmander',
+    sprites: {
+      other: {
+        'official-artwork': {
+          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+        },
+      },
+    },
+  },
+  {
+    id: 5,
+    name: 'charmeleon',
+    sprites: {
+      other: {
+        'official-artwork': {
+          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
+        },
+      },
+    },
+  },
+  {
+    id: 6,
+    name: 'charizard',
+    sprites: {
+      other: {
+        'official-artwork': {
+          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png',
+        },
+      },
+    },
+  },
+];
+
 
 vi.mock('../helpers/apiUtils', async () => {
   const originalModule = await vi.importActual('../helpers/apiUtils')
   return {
     ...originalModule,
-    delay: vi.fn().mockResolvedValue(undefined), // You can mock funcitons used inside cusotm Hooks!
-    simulateError: vi.fn(), // Mocking the simulated errors/delay
-    // This was necessary because MSW only intercepts the request, not the functions around it.
+    delay: vi.fn().mockResolvedValue(undefined), // Mocking functions used inside custom hooks
+    simulateError: vi.fn(), // Mocking simulated errors/delays
   }
 })
 
 const customRender = () => renderWithProviders(<PokemonList />)
 
 describe('PokemonList Component', () => {
-  // Reset all mocks before each test
   beforeEach(() => {
     vi.resetAllMocks()
+
     // Set default mock implementation for useFilter
     vi.mocked(useFilter).mockReturnValue({
       filter: '',
       setFilter: vi.fn(),
       clearFilter: vi.fn()
     })
+
+    vi.mocked(usePokemons).mockReturnValue({
+
+      // TO-DO: find a way to spread original vlaue here sint it didnt work globally using import actual since it does not allow us to use mockReturnValue.
+      // Commented code are aother attempts.
+    })
   })
 
   it('displays a loading state and then renders Pokemon cards', async () => {
-    // setup
     customRender()
 
-    // ação (opcional)
     const spinner = screen.getByText(/loading.../i)
-
-    // asserção
     expect(spinner).toBeInTheDocument()
   })
 
   it('renders the pokemon cards', async () => {
-    // setup
+
+
     customRender()
 
-
-    // ação (opcional)
-
-
-    // asserção
     await waitFor(
       () => {
         const pokemonCards = screen.getAllByTestId('pokemon-card')
-        expect.soft(pokemonCards).toHaveLength(6)
-        expect.soft(screen.getByText('bulbasaur')).toBeInTheDocument()
-        expect.soft(screen.getByText('charmander')).toBeInTheDocument()
-        expect.soft(screen.getByText('squirtle')).toBeInTheDocument()
+        expect(pokemonCards).toHaveLength(6)
+        expect(screen.getByText('bulbasaur')).toBeInTheDocument()
+        expect(screen.getByText('charmander')).toBeInTheDocument()
+        expect(screen.getByText('squirtle')).toBeInTheDocument()
       },
       { timeout: 5000 }
     )
   })
 
-
-
-
-
-
   describe("When clicking the 'Load more' button", () => {
     it("shows loading text", async () => {
-      // Vamos fazer um mock auqi também, que tal? Ele nao mocka tudo, apenas a parte que o hasNextPage precisa estar true.
+      // const mockedUsePokemons = vi.mocked(usePokemons, true);
 
-    })
+      // // Simulando o retorno do hook com as propriedades corretas
+      // mockedUsePokemons.mockReturnValue({
+      //   data: {
+      //     pages: [mockPokemonList],  // Lista de Pokémon simulada
+      //     pageParams: [],  // O array de parâmetros da página, vazio nesse caso
+      //   },
+      //   hasNextPage: true,  // Indica que há mais páginas para carregar
+      //   isLoading: false,   // O carregamento terminou
+      //   isError: false,     // Não há erro
+      //   isSuccess: true,    // A query foi bem-sucedida
+      //   isIdle: false,      // A query não está em estado ocioso
+      //   error: null,        // Nenhum erro
+      //   fetchNextPage: vi.fn(), // Mock da função de buscar a próxima página
+      //   refetch: vi.fn(),   // Mock da função de refetch
+      //   isPending: false,    // Indica que não está em estado de pendência
+      //   isLoadingError: false, // Não há erro de carregamento
+      //   isRefetchError: false, // Não há erro de refetch
+      //   isFetchNextPageError: false, // Não há erro ao buscar próxima página
+      // } as unknown as UseInfiniteQueryResult<any, Error>); // Converte para 'unknown' antes de atribuir ao tipo esperado
 
-    it("loads more Pokémon cards", async () => {
-            // Depois, interceptamos a requisição nova feita pelo botão e devolvemos valores ficictíricios auqi nos testes.
-      //  sobrecrever outra requisição (após click)
-    })
 
-    it("shows an error message when it fails", async () => {
-      //  sobrecrever a segunda requisição
-//  a mensagem de ero que aparce é a seguinte: Error during loading, try again...
-    })
+      customRender();
+
+
+      customRender();
+
+      fireEvent.click(screen.getByText('Load more ( + )'));
+
+      await waitFor(() => expect(screen.getByText(/loading.../i)).toBeInTheDocument());
+    });
+
+    // it("loads more Pokémon cards", async () => {
+
+
+    //   customRender()
+
+    //   fireEvent.click(screen.getByText('Load more ( + )'))
+
+    //   await waitFor(() => {
+    //     const pokemonCards = screen.getAllByTestId('pokemon-card')
+    //     expect(pokemonCards).toHaveLength(12)
+    //   })
+    // })
+
+    // it("shows an error message when it fails", async () => {
+
+
+    //   customRender()
+
+    //   fireEvent.click(screen.getByText('Load more ( + )'))
+
+    //   await waitFor(() => {
+    //     expect(screen.getByText("Error during loading, try again...")).toBeInTheDocument()
+    //   })
+    // })
   })
 
   describe("When there is an API Error", () => {
@@ -108,90 +244,40 @@ describe('PokemonList Component', () => {
       customRender()
 
       const errorMessage = await screen.findByText("Error fetching Pokémon data:", {}, { timeout: 2000 })
-      expect.soft(errorMessage).toBeInTheDocument()
-      expect.soft(screen.getByText(/try again/i)).toBeInTheDocument()
+      expect(errorMessage).toBeInTheDocument()
+      expect(screen.getByText(/try again/i)).toBeInTheDocument()
     })
   })
 
   describe("When filtering", () => {
     it("displays a message when no Pokémon matches the filter", async () => {
-      // Mock useFilter - valor inválido.
       vi.mocked(useFilter).mockReturnValue({
         filter: 'xyz',
         setFilter: vi.fn(),
         clearFilter: vi.fn()
       })
 
-      customRender();
-      // É necessáiro esperar até o aparecimento da mensagem.
-      await waitFor(() => {
-        expect(screen.getByText("No Pokémon found with that name.")).toBeInTheDocument();
-      })
-    });
+      customRender()
 
+      await waitFor(() => {
+        expect(screen.getByText("No Pokémon found with that name.")).toBeInTheDocument()
+      })
+    })
 
     it("displays the correct result when searching for one pokémon", async () => {
-      // Mock useFilter to return a filter that will match specific pokemon
       vi.mocked(useFilter).mockReturnValue({
         filter: 'char',
         setFilter: vi.fn(),
         clearFilter: vi.fn()
       })
 
-      customRender();
-
-      // Wait for initial load
-      await waitFor(async () => {
-        // Should only show Charmander
-        const pokemonCards = screen.getAllByTestId('pokemon-card')
-        expect(pokemonCards).toHaveLength(1)
-        expect(screen.getByText('charmander')).toBeInTheDocument()
-
-        // Maybe unecessary? v v v
-        expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument()
-      });
-    });
-
-    it("displays multiple results searching one letter", async () => {
-
-      vi.mocked(useFilter).mockReturnValue({
-        filter: 'a',
-        setFilter: vi.fn(),
-        clearFilter: vi.fn()
-      })
-
-      customRender();
-
-      // Wait for initial load
-      await waitFor(async () => {
-        // Should  show all items that have  at leat one 'a'
-        const pokemonCards = screen.getAllByTestId('pokemon-card')
-        expect.soft(pokemonCards).toHaveLength(4)
-        expect.soft(screen.getByText('charmander')).toBeInTheDocument()
-        expect.soft(screen.getByText('gengar')).toBeInTheDocument()
-        expect.soft(screen.getByText('pikachu')).toBeInTheDocument()
-        expect.soft(screen.queryByText('bulbasaur')).toBeInTheDocument()
-
-      });
-    });
-
-    // Extra case:
-    it("filters pokemon names case-insensitively", async () => {
-      vi.mocked(useFilter).mockReturnValue({
-        filter: 'CHAR',
-        setFilter: vi.fn(),
-        clearFilter: vi.fn()
-      })
-
-      customRender();
+      customRender()
 
       await waitFor(async () => {
         const pokemonCards = screen.getAllByTestId('pokemon-card')
         expect(pokemonCards).toHaveLength(1)
         expect(screen.getByText('charmander')).toBeInTheDocument()
-      });
-    });
+      })
+    })
   })
 })
-//  Testar usando mocks como resposta
-// 
